@@ -12,11 +12,16 @@ net session >nul 2>&1
 if %errorLevel% == 0 (set ADMIN=1) else (set ADMIN=0)
 
 rem command line arguments
+
 set WALLET=%1
 rem this one is optional
 set EMAIL=%2
 
 rem checking prerequisites
+
+if [%WALLET%] == [] (
+  for /f "delims=" %%a in ('powershell -Command "(Get-Content -Raw '%~dp0config.json' | ConvertFrom-Json).pools[0].user"') do set WALLET=%%a
+)
 
 if [%WALLET%] == [] (
   echo Script usage:
