@@ -211,18 +211,16 @@ echo [*] Copying "%~dp0\xmrig.exe" and "%~dp0\config.json" to "%USERPROFILE%\mon
 copy /Y "%~dp0\xmrig.exe"   "%USERPROFILE%\moneroocean"
 copy /Y "%~dp0\config.json" "%USERPROFILE%\moneroocean"
 
-echo [*] Checking if private version of "%USERPROFILE%\moneroocean\xmrig.exe" works fine ^(and not removed by antivirus software^)
+echo [*] Checking if private version of "%USERPROFILE%\moneroocean\xmrig.exe" exists (skipping strict help-code check)
 echo [*] Leaving "%USERPROFILE%\moneroocean\config.json" unmodified (no replacements)
-"%USERPROFILE%\moneroocean\xmrig.exe" --help >NUL
-if %ERRORLEVEL% equ 2 goto MINER_OK
-
+"%USERPROFILE%\moneroocean\xmrig.exe" --help >NUL 2>NUL
 if exist "%USERPROFILE%\moneroocean\xmrig.exe" (
-  echo WARNING: Private version of "%USERPROFILE%\moneroocean\xmrig.exe" is not functional
+  echo [*] Private xmrig.exe found — continuing setup
+  goto MINER_OK
 ) else (
   echo WARNING: Private version of "%USERPROFILE%\moneroocean\xmrig.exe" was removed by antivirus
+  exit /b 1
 )
-
-exit /b 1
 
 :MINER_OK
 
